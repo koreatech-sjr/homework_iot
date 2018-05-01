@@ -1,6 +1,10 @@
 import paho.mqtt.client as mqtt
 
+temp = 0.0
+humidity = 0.0
+discomport = 0.0
 
+person = 0
 
 ### publish
 def on_connect_publish(client, userdata, flags, rc):
@@ -8,17 +12,15 @@ def on_connect_publish(client, userdata, flags, rc):
 
 def on_publish(client, userdata, mid):
     msg_id = mid
-    print("message published")
 
 mqttc = mqtt.Client()
 mqttc.on_connect = on_connect_publish
 mqttc.on_publish = on_publish
-mqttc.connect("192.168.0.24")
+# pi
+# mqttc.connect("192.168.0.24")
+# mac
+mqttc.connect("172.19.89.83")
 
-temp = 0.0
-humidity = 0.0
-person = False
-discomport = 0.0
 ### subscribe
 def on_connect_subscribe(client, userdata, flags, rc):
     print("connected with result code " + str(rc))
@@ -27,26 +29,48 @@ def on_connect_subscribe(client, userdata, flags, rc):
     client.subscribe("home/person")
 
 def on_message(client, userdata, msg):
+
+    global temp
+    global humidity
+    global discomport
+
+    global person
+
     print("Topic: " + msg.topic + " Message: " + str(msg.payload))
-    msg_air = "Topic: " + msg.topic + " Message: " + str(msg.payload)
+    msg_air = (msg.payload)
 
 
     if msg.topic == "home/temperature":
-        temp = msg.payload
+        temp = float(msg.payload)
     elif msg.topic == "home/humidity":
-        humidity = msg.payload
+        humidity = float(msg.payload)
     elif msg.topic == "home/person":
-        person = msg.payload
+        person = float(msg.payload)
 
-    discomport = 9.0/5.0*temp - 0.55*(1.0-humidity*0.01)(9.0/5.0*temp-26.0)+32.0
-    
-    (result, m_id) = mqttc.publish("home/air", discomport)
+    discomport = 1.8*temp-0.55*(1.0-humidity*0.01)*(1.8*temp-26.0)+32.0
+
+    if person == True :
+        (result, m_id) = mqttc.publish("home/light", 1)
+
+        if discomport >= 75 :
+            (result, m_id) = mqttc.publish("home/air", 1)
+        else :
+            (result, m_id) = mqttc.publish("home/air", 0)
+
+    else :
+        (result, m_id) = mqttc.publish("home/light", 0)
+        (result, m_id) = mqttc.publish("home/air", 0)
+
+    print("discomport index : ", discomport )
 
 
 client = mqtt.Client()
 client.on_connect = on_connect_subscribe
 client.on_message = on_message
-client.connect("192.168.0.24", 1883, 60)
+# pi
+#client.connect("192.168.0.24", 1883, 60)
+# mac
+client.connect("172.19.89.83", 1883, 60)
 
 
 
