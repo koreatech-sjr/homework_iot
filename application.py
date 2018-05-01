@@ -14,19 +14,7 @@ client.on_connect = on_connect_subscribe
 client.on_message = on_message
 client.connect("192.168.0.24", 1883, 60)
 
-### publish
-def on_connect_publish(client, userdata, flags, rc):
-    print("Connected with result code " + str(rc))
-
-def on_publish(client, userdata, mid):
-    msg_id = mid
-    print("message published")
-
-mqttc = mqtt.Client()
-mqttc.on_connect = on_connect_publish
-mqttc.on_publish = on_publish
-mqttc.connect("192.168.0.24")
-mqttc.loop_start()
+### publish 
 
 try:
     client.loop_forever()
