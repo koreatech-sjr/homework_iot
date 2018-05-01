@@ -6,6 +6,11 @@ discomport = 0.0
 
 person = 0
 
+tmp_light = 0
+tmp_air = 0
+light = 0
+air = 0
+
 ### publish
 def on_connect_publish(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
@@ -36,6 +41,9 @@ def on_message(client, userdata, msg):
 
     global person
 
+    global tmp_air
+    global tmp_light
+
     print("Topic: " + msg.topic + " Message: " + str(msg.payload))
     msg_air = (msg.payload)
 
@@ -50,19 +58,35 @@ def on_message(client, userdata, msg):
     discomport = 1.8*temp-0.55*(1.0-humidity*0.01)*(1.8*temp-26.0)+32.0
 
     if person == True :
-        (result, m_id) = mqttc.publish("home/light", 1)
+        light = 1
+        if tmp_light != light :
+            tmp_light = 1
+            (result, m_id) = mqttc.publish("home/light", light)
 
         if discomport >= 75 :
-            (result, m_id) = mqttc.publish("home/air", 1)
+            air = 1
+            if tmp_air != air :
+                tmp_air = 1
+                (result, m_id) = mqttc.publish("home/air", air)
         else :
-            (result, m_id) = mqttc.publish("home/air", 0)
+            air = 0
+            if tmp_air != air :
+                tmp_air = 0
+                (result, m_id) = mqttc.publish("home/air", air)
 
     else :
-        (result, m_id) = mqttc.publish("home/light", 0)
-        (result, m_id) = mqttc.publish("home/air", 0)
+        light = 0
+        air = 0
+        if tmp_light != light :
+            tmp_light = 0
+            (result, m_id) = mqttc.publish("home/light", light)
+
+        if tmp_air != air :
+            tmp_air = 0
+            (result, m_id) = mqttc.publish("home/air", air)
 
     print("discomport index : ", discomport )
-
+    print("air : ", air)
 
 client = mqtt.Client()
 client.on_connect = on_connect_subscribe
