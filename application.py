@@ -31,7 +31,7 @@ mqttc.on_publish = on_publish
 
 try:
     while True:
-        t = on_message()
+        (topic, msg) = on_message()
 
 except KeyboardInterrupt:
     print("Finished!")
