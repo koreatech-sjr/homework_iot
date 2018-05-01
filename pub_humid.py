@@ -29,9 +29,9 @@ mqttc.on_publish = on_publish
 
 # YOU NEED TO CHANGE THE IP ADDRESS OR HOST NAME
 # pi
-# mqttc.connect("192.168.0.24")
+mqttc.connect("192.168.0.24")
 # mac
-mqttc.connect("172.19.89.83")
+# mqttc.connect("172.19.89.83")
 #mqttc.connect("localhost")
 mqttc.loop_start()
 

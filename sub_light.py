@@ -17,9 +17,9 @@ client.on_message = on_message
 
 # YOU NEED TO CHANGE THE IP ADDRESS OR HOST NAME
 # pi
-# client.connect("192.168.0.24", 1883, 60)
+client.connect("192.168.0.24", 1883, 60)
 # mac
-client.connect("172.19.89.83", 1883, 60)
+# client.connect("172.19.89.83", 1883, 60)
 #client.connect("localhost")
 
 try:

@@ -22,9 +22,9 @@ mqttc = mqtt.Client()
 mqttc.on_connect = on_connect_publish
 mqttc.on_publish = on_publish
 # pi
-# mqttc.connect("192.168.0.24")
+mqttc.connect("192.168.0.24")
 # mac
-mqttc.connect("172.19.89.83")
+# mqttc.connect("172.19.89.83")
 
 ### subscribe
 def on_connect_subscribe(client, userdata, flags, rc):
@@ -92,9 +92,9 @@ client = mqtt.Client()
 client.on_connect = on_connect_subscribe
 client.on_message = on_message
 # pi
-#client.connect("192.168.0.24", 1883, 60)
+client.connect("192.168.0.24", 1883, 60)
 # mac
-client.connect("172.19.89.83", 1883, 60)
+# client.connect("172.19.89.83", 1883, 60)
 
 
 
