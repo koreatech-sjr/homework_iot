@@ -15,7 +15,7 @@ def on_publish(client, userdata, mid):
     global idx
     idx = idx+1
     for i in range(idx):
-        print("-",end='')
+        print "-",end=''
     msg_id = mid
     if idx == 10 :
         idx = 0
